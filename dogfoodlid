@@ -1,19 +1,19 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+var arguments = process.argv;
+
 const dictionaryTable = (function(){
   let key;
 
-  return [
-    "dog",
-    "food",
-    "lid",
-    "dildo",
-    "god",
-    "of"
-  ].reduce(function(memo, word){
-    key = word.split('').sort().join('');
-    memo[key] = memo[key] || [];
-    memo[key].push(word);
-    return memo;
-  }, {});
+  return fs.readFileSync("words.txt", {encoding:'utf8', flag:'r'}).
+    split("\n").
+    reduce(function(memo, word){
+      key = word.split('').sort().join('');
+      memo[key] = memo[key] || [];
+      memo[key].push(word);
+      return memo;
+    }, {});
 })();
 
 function Anagram(text){
@@ -54,5 +54,6 @@ Anagram.findMatchesInMaterial = function(material, width){
   return Anagram.findMatchesInMaterial(material, width + 1);
 };
 
-const anagram = new Anagram("dogfoodlid");
+const text = arguments[arguments.length - 1];
+const anagram = new Anagram(text);
 console.log(anagram.variations());
